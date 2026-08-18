@@ -1,0 +1,60 @@
+name: qr_bloom
+description: "QR Bloom — a soft-pink, girly-minimalist QR generator & scanner."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management
+  provider: ^6.1.2
+
+  # QR
+  qr_flutter: ^4.1.0
+  mobile_scanner: ^5.2.3
+
+  # Sharing / files
+  share_plus: ^10.0.2
+  path_provider: ^2.1.4
+  screenshot: ^3.0.0
+  image_gallery_saver_plus: ^3.0.5
+
+  # Storage
+  shared_preferences: ^2.3.2
+
+  # Design
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.0
+
+  # Ads
+  google_mobile_ads: ^5.1.0
+
+  # Permissions & platform
+  permission_handler: ^11.3.1
+  url_launcher: ^6.3.0
+  vibration: ^2.0.0
+  audioplayers: ^6.0.0
+
+  cupertino_icons: ^1.0.8
+  uuid: ^4.5.1
+  image_picker: ^1.1.2
+  flutter_contacts: ^1.1.9+2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/sounds/
+
+  # See SETUP.md for app icon (flutter_launcher_icons) and
+  # splash screen (flutter_native_splash) generation instructions.
