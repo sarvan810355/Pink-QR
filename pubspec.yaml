@@ -15,6 +15,7 @@ dependencies:
 
   # QR
   qr_flutter: ^4.1.0
+  qr: ^3.0.2
   mobile_scanner: ^5.2.3
 
   # Sharing / files
@@ -48,6 +49,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+  flutter_native_splash: ^2.4.1
 
 flutter:
   uses-material-design: true
@@ -55,6 +58,26 @@ flutter:
   assets:
     - assets/images/
     - assets/sounds/
+    - assets/icon/
 
-  # See SETUP.md for app icon (flutter_launcher_icons) and
-  # splash screen (flutter_native_splash) generation instructions.
+# App icon — regenerate with `dart run flutter_launcher_icons` after
+# changing assets/icon/app_icon.png (see scripts/generate_icon.py).
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/app_icon.png"
+  min_sdk_android: 21
+  background_color_ios: "#FFF6F9"
+  remove_alpha_ios: true
+
+# Splash screen — regenerate with `dart run flutter_native_splash:create`.
+flutter_native_splash:
+  color: "#FFF6F9"
+  image: assets/icon/splash_logo.png
+  color_dark: "#241B1E"
+  image_dark: assets/icon/splash_logo_dark.png
+  android_12:
+    color: "#FFF6F9"
+    image: assets/icon/splash_logo.png
+    color_dark: "#241B1E"
+    image_dark: assets/icon/splash_logo_dark.png

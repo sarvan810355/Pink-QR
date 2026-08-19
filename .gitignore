@@ -11,9 +11,8 @@ build/
 *.iws
 .idea/
 
-# Generated platform folders (created via `flutter create .`, see SETUP.md)
-/android/
-/ios/
+# android/ and ios/ are committed (clone-and-run). Desktop/web platforms
+# were never generated for this project — ignore if anyone adds them later.
 /macos/
 /linux/
 /windows/

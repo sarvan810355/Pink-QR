@@ -12,7 +12,7 @@ class FeedbackService {
   Future<void> scanSuccess() async {
     _softHaptic();
     try {
-      await _player.play(AssetSource('sounds/chime.mp3'), volume: 0.6);
+      await _player.play(AssetSource('sounds/chime.wav'), volume: 0.6);
     } catch (_) {
       // Sound asset optional — fail silently if not bundled.
     }

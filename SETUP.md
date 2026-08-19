@@ -1,149 +1,69 @@
 # QR Bloom — Setup Guide
 
-This repo ships the full `lib/` app (Dart/Flutter), `pubspec.yaml`, and assets.
-Native `android/` and `ios/` platform folders are **not** committed (see
-`.gitignore`) because they're version-pinned to whatever Flutter SDK builds
-them — generating them locally avoids shipping a stale/incompatible Gradle
-or Xcode config. Follow the steps below in order.
+Native `android/` and `ios/` folders, the app icon, splash screen, and a
+placeholder chime sound are all committed and ready to run — this is a
+clone-and-go project.
 
-## 1. Generate native platform folders
-
-```bash
-flutter create --platforms=android,ios --org com.qrbloom .
-flutter pub get
-```
-
-This scaffolds `android/` and `ios/` matching your installed Flutter SDK
-version. Then apply the manifest/permission edits below.
-
-## 2. Android — permissions & AdMob
-
-Edit `android/app/src/main/AndroidManifest.xml`:
-
-```xml
-<manifest ...>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <!-- Only needed if targeting Android 12 (API 32) or below for gallery saves -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32"/>
-
-    <application ...>
-        <!-- AdMob: replace with your real App ID from the AdMob console -->
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
-        <!-- ^ this is Google's public TEST app ID — swap before release -->
-        ...
-    </application>
-</manifest>
-```
-
-In `android/app/build.gradle`, `mobile_scanner` requires:
-
-```gradle
-android {
-    defaultConfig {
-        minSdkVersion 21
-    }
-}
-```
-
-## 3. iOS — permissions & AdMob
-
-Edit `ios/Runner/Info.plist`, add:
-
-```xml
-<key>NSCameraUsageDescription</key>
-<string>QR Bloom uses your camera to scan QR codes.</string>
-<key>NSPhotoLibraryUsageDescription</key>
-<string>QR Bloom needs photo access to import QR images and save your generated codes.</string>
-<key>NSPhotoLibraryAddUsageDescription</key>
-<string>QR Bloom saves your styled QR codes to your photo library.</string>
-<key>GADApplicationIdentifier</key>
-<string>ca-app-pub-3940256099942544~1458002511</string>
-<!-- ^ Google's public TEST app ID — swap before release -->
-```
-
-`ios/Podfile` — set the deployment target (required by `mobile_scanner` /
-`google_mobile_ads`):
-
-```ruby
-platform :ios, '14.0'
-```
-
-Then run `cd ios && pod install`.
-
-## 4. Swap AdMob test IDs for real ones
-
-Test ad unit IDs are wired in `lib/services/ads_service.dart`
-(`bannerAdUnitId`, `interstitialAdUnitId`). Replace them — and the
-`APPLICATION_ID` / `GADApplicationIdentifier` above — with your real AdMob
-IDs before release. Never ship test IDs to production.
-
-## 5. App icon
-
-Add `flutter_launcher_icons` as a dev dependency and configure it:
-
-```yaml
-dev_dependencies:
-  flutter_launcher_icons: ^0.14.1
-
-flutter_launcher_icons:
-  android: true
-  ios: true
-  image_path: "assets/icon/app_icon.png" # 1024x1024 pink QR Bloom mark
-  min_sdk_android: 21
-  background_color_ios: "#FFF6F9"
-```
-
-Drop a 1024×1024 PNG at `assets/icon/app_icon.png` (soft pink rounded QR
-mark — a good motif: a small blooming flower sitting on a QR corner), then:
-
-```bash
-dart run flutter_launcher_icons
-```
-
-## 6. Splash screen
-
-Add `flutter_native_splash`:
-
-```yaml
-dev_dependencies:
-  flutter_native_splash: ^2.4.1
-
-flutter_native_splash:
-  color: "#FFF6F9"
-  image: assets/icon/splash_logo.png   # centered logo, transparent bg
-  color_dark: "#241B1E"
-  image_dark: assets/icon/splash_logo_dark.png
-  android_12:
-    color: "#FFF6F9"
-    image: assets/icon/splash_logo.png
-    color_dark: "#241B1E"
-    image_dark: assets/icon/splash_logo_dark.png
-```
-
-```bash
-dart run flutter_native_splash:create
-```
-
-## 7. Chime sound (optional but recommended)
-
-`lib/services/feedback_service.dart` plays `assets/sounds/chime.mp3` on
-scan success and fails silently if it's missing. Add a short, soft chime
-there for the full experience — see `assets/sounds/README.txt`.
-
-## 8. Run it
+## 1. Run it
 
 ```bash
 flutter pub get
 flutter run
 ```
 
-## Notes
+That's it for a local debug run using Google's public **test** AdMob IDs
+(already wired in). Before releasing to a store, do the following:
+
+## 2. Swap AdMob test IDs for real ones
+
+Test ad unit IDs are wired in `lib/services/ads_service.dart`
+(`bannerAdUnitId`, `interstitialAdUnitId`). Replace them — and the AdMob
+App IDs below — with your real IDs from the AdMob console. Never ship
+test IDs to production.
+
+- Android: `com.google.android.gms.ads.APPLICATION_ID` meta-data in
+  `android/app/src/main/AndroidManifest.xml`
+- iOS: `GADApplicationIdentifier` in `ios/Runner/Info.plist`
+
+## 3. Set your own bundle/application ID
+
+Both platforms currently use `com.qrbloom.qr_bloom` (Android
+`applicationId` in `android/app/build.gradle.kts`, iOS bundle ID in the
+Xcode project). Change these to your own before publishing.
+
+## 4. App icon & splash screen
+
+Already generated from `assets/icon/app_icon.png` /
+`splash_logo.png` / `splash_logo_dark.png` (a pink QR-corner + blooming
+flower mark, produced by `scripts/generate_icon.py` since no design tool
+was available when this project was built). To change the artwork:
+
+1. Edit/replace the PNGs in `assets/icon/` (or tweak and re-run
+   `python3 scripts/generate_icon.py`).
+2. Regenerate:
+   ```bash
+   dart run flutter_launcher_icons
+   dart run flutter_native_splash:create
+   ```
+
+Config for both lives at the bottom of `pubspec.yaml`
+(`flutter_launcher_icons:` / `flutter_native_splash:` keys).
+
+## 5. Chime sound
+
+`assets/sounds/chime.wav` is a synthesized placeholder (a soft two-note
+bell "ting", made by `scripts/generate_chime.py`). It's fine to ship as
+is, or drop in a nicer recorded sound at the same path — see
+`assets/sounds/README.txt`. `FeedbackService` fails silently if the file
+is ever missing, so this is never a hard dependency.
+
+## 6. Camera permission denial UX
+
+Already wired with a friendly in-app screen (`PermissionDeniedView`)
+instead of relying on the raw OS dialog — nothing to configure, just
+verify the manifest strings above stay in sync if you change them.
+
+## Notes for maintainers
 
 - **State management**: `provider` (see `lib/main.dart` — `HistoryService`,
   `ThemeService`, `PremiumService` are the three app-wide notifiers).
@@ -153,5 +73,12 @@ flutter run
   spec. Wire up the `in_app_purchase` plugin against a real store product ID
   in `SettingsScreen._unlockPremium` when ready to sell it for real.
 - **WiFi/vCard formats**: built in `lib/services/qr_content_service.dart`
-  following the standard `WIFI:` and `BEGIN:VCARD` specs — verified against
-  common scanner apps' expected escaping rules.
+  following the standard `WIFI:` and `BEGIN:VCARD` specs.
+- **Heart-shaped QR modules**: `lib/widgets/heart_qr_painter.dart` hand-paints
+  data modules as hearts (finder-pattern corners stay plain squares for scan
+  reliability) using a high error-correction level. Verified against an
+  independent decoder (OpenCV) via `scripts/verify_heart_qr.py` — requires
+  `pip install opencv-python-headless segno` to re-run.
+- Regenerating `android/`/`ios/` from scratch (e.g. after a major Flutter
+  upgrade) is safe: `flutter create --platforms=android,ios --org com.qrbloom .`
+  won't overwrite `lib/`, then re-apply steps 2–4 above.

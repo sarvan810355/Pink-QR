@@ -85,6 +85,7 @@ class _QrCustomizerSheetState extends State<QrCustomizerSheet> {
                       QrModuleStyle.square => 'Classic',
                       QrModuleStyle.rounded => 'Rounded',
                       QrModuleStyle.dots => 'Dots',
+                      QrModuleStyle.hearts => '💗 Hearts',
                     },
                     selected: _style.moduleStyle == m,
                     onTap: () => _apply(_style.copyWith(moduleStyle: m)),

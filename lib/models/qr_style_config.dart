@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-enum QrModuleStyle { square, rounded, dots }
+enum QrModuleStyle { square, rounded, dots, hearts }
 
 enum QrFrameStyle { none, floral, polkaDot, heart, ribbon }
 

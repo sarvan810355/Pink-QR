@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../models/qr_style_config.dart';
 import '../theme/app_theme.dart';
+import 'heart_qr_painter.dart';
 
 /// Renders a QR code with the full aesthetic customizer applied: module
 /// pattern (square/rounded/dots), a cute decorative frame, and an
@@ -20,14 +21,31 @@ class StyledQrView extends StatelessWidget {
     this.repaintKey,
   });
 
-  QrEyeShape get _eyeShape => style.moduleStyle == QrModuleStyle.square
-      ? QrEyeShape.square
-      : QrEyeShape.circle;
+  QrEyeShape get _eyeShape =>
+      style.moduleStyle == QrModuleStyle.square ? QrEyeShape.square : QrEyeShape.circle;
 
   QrDataModuleShape get _dataShape =>
-      style.moduleStyle == QrModuleStyle.square
-          ? QrDataModuleShape.square
-          : QrDataModuleShape.circle;
+      style.moduleStyle == QrModuleStyle.square ? QrDataModuleShape.square : QrDataModuleShape.circle;
+
+  Widget _buildQrCode() {
+    if (style.moduleStyle == QrModuleStyle.hearts) {
+      return HeartQrView(
+        data: data,
+        foreground: style.foregroundColor,
+        background: style.backgroundColor,
+        size: size,
+      );
+    }
+    return QrImageView(
+      data: data,
+      version: QrVersions.auto,
+      size: size,
+      backgroundColor: style.backgroundColor,
+      eyeStyle: QrEyeStyle(eyeShape: _eyeShape, color: style.foregroundColor),
+      dataModuleStyle: QrDataModuleStyle(dataModuleShape: _dataShape, color: style.foregroundColor),
+      errorStateBuilder: (ctx, err) => _placeholder(ctx),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,21 +54,7 @@ class StyledQrView extends StatelessWidget {
         : Stack(
             alignment: Alignment.center,
             children: [
-              QrImageView(
-                data: data,
-                version: QrVersions.auto,
-                size: size,
-                backgroundColor: style.backgroundColor,
-                eyeStyle: QrEyeStyle(
-                  eyeShape: _eyeShape,
-                  color: style.foregroundColor,
-                ),
-                dataModuleStyle: QrDataModuleStyle(
-                  dataModuleShape: _dataShape,
-                  color: style.foregroundColor,
-                ),
-                errorStateBuilder: (ctx, err) => _placeholder(ctx),
-              ),
+              _buildQrCode(),
               if (style.sticker != QrSticker.none)
                 Container(
                   padding: const EdgeInsets.all(8),
