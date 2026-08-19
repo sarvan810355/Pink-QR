@@ -32,6 +32,8 @@
 		<string>QR Bloom needs photo access to import QR images and save your generated codes.</string>
 		<key>NSPhotoLibraryAddUsageDescription</key>
 		<string>QR Bloom saves your styled QR codes to your photo library.</string>
+		<key>NSContactsUsageDescription</key>
+		<string>QR Bloom needs contacts access to save a scanned contact card.</string>
 		<key>GADApplicationIdentifier</key>
 		<string>ca-app-pub-3940256099942544~1458002511</string>
 		<key>UIApplicationSceneManifest</key>

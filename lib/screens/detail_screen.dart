@@ -192,11 +192,18 @@ class _DetailScreenState extends State<DetailScreen> {
                     ),
                     const SizedBox(height: AppSpacing.lg),
                     // Offstage moment card used only for high-res capture.
-                    Opacity(
-                      opacity: 0,
+                    //
+                    // IMPORTANT: this must stay actually painted (not
+                    // Opacity(opacity: 0), which makes Flutter skip
+                    // paintChild entirely and leaves the RepaintBoundary's
+                    // layer null, silently breaking Share/Save). ClipRect
+                    // hides it visually without preventing the paint pass —
+                    // RenderRepaintBoundary.toImage() captures its own
+                    // isolated layer regardless of ancestor clipping.
+                    ClipRect(
                       child: IgnorePointer(
                         child: SizedBox(
-                          height: 1,
+                          height: 0,
                           child: OverflowBox(
                             maxHeight: 600,
                             alignment: Alignment.topCenter,

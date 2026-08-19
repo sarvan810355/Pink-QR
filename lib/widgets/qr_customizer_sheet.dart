@@ -34,8 +34,9 @@ class QrCustomizerSheet extends StatefulWidget {
 class _QrCustomizerSheetState extends State<QrCustomizerSheet> {
   late QrStyleConfig _style = widget.initial;
 
-  // First 3 frames/stickers are free; the rest require premium unlock,
-  // matching the "Remove Ads + Unlock All Stickers & Frames" IAP.
+  // First 2 frames and first 4 stickers are free; the rest require
+  // premium unlock, matching the "Remove Ads + Unlock All Stickers &
+  // Frames" IAP.
   static const _freeFrameCount = 2;
   static const _freeStickerCount = 4;
 
