@@ -54,7 +54,9 @@ class _DetailScreenState extends State<DetailScreen> {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/qr_bloom_moment_${widget.item.id}.png');
     await file.writeAsBytes(bytes);
-    await Share.shareXFiles([XFile(file.path)], text: 'Made with QR Bloom 🌸');
+    await SharePlus.instance.share(
+      ShareParams(files: [XFile(file.path)], text: 'Made with QR Bloom 🌸'),
+    );
   }
 
   Future<void> _saveToGallery() async {

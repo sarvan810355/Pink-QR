@@ -16,13 +16,13 @@ dependencies:
   # QR
   qr_flutter: ^4.1.0
   qr: ^3.0.2
-  mobile_scanner: ^5.2.3
+  mobile_scanner: ^7.4.0
 
   # Sharing / files
-  share_plus: ^10.0.2
+  share_plus: ^13.3.0
   path_provider: ^2.1.4
   screenshot: ^3.0.0
-  image_gallery_saver_plus: ^3.0.5
+  image_gallery_saver_plus: ^5.1.1
 
   # Storage
   shared_preferences: ^2.3.2
@@ -35,15 +35,15 @@ dependencies:
   google_mobile_ads: ^9.1.0
 
   # Permissions & platform
-  permission_handler: ^11.3.1
+  permission_handler: ^13.0.1
   url_launcher: ^6.3.0
-  vibration: ^2.0.0
+  vibration: ^3.2.0
   audioplayers: ^6.0.0
 
   cupertino_icons: ^1.0.8
   uuid: ^4.5.1
   image_picker: ^1.1.2
-  flutter_contacts: ^1.1.9+2
+  flutter_contacts: ^2.3.1
 
 dev_dependencies:
   flutter_test:

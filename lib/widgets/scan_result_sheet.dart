@@ -39,7 +39,9 @@ class ScanResultSheet extends StatelessWidget {
   }
 
   Future<void> _saveContact(BuildContext context) async {
-    if (await FlutterContacts.requestPermission()) {
+    final status =
+        await FlutterContacts.permissions.request(PermissionType.readWrite);
+    if (status == PermissionStatus.granted || status == PermissionStatus.limited) {
       final name = QrContentService.parseContactName(item.rawData);
       final lines = item.rawData.split('\n');
       String phone = '';
@@ -48,11 +50,12 @@ class ScanResultSheet extends StatelessWidget {
         if (l.startsWith('TEL')) phone = l.split(':').last.trim();
         if (l.startsWith('EMAIL')) email = l.split(':').last.trim();
       }
-      final contact = Contact()
-        ..name.first = name
-        ..phones = phone.isNotEmpty ? [Phone(phone)] : []
-        ..emails = email.isNotEmpty ? [Email(email)] : [];
-      await contact.insert();
+      final contact = Contact(
+        name: Name(first: name),
+        phones: phone.isNotEmpty ? [Phone(number: phone)] : [],
+        emails: email.isNotEmpty ? [Email(address: email)] : [],
+      );
+      await FlutterContacts.create(contact);
       if (context.mounted) {
         ScaffoldMessenger.of(context)
             .showSnackBar(const SnackBar(content: Text('Contact saved 💌')));
